@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.fragment_home.view.*
-import org.cmdline.ackr.Email
 import org.cmdline.ackr.R
 import org.cmdline.ackr.ui.EmailAdapter
 
@@ -30,12 +29,22 @@ class HomeFragment : Fragment() {
             textView.text = it
         })
 
-        root.email_list.adapter = EmailAdapter(inflater).apply {
-            emails = listOf(
-                Email("fake@email.ackr", "Save on your student loans NOW!"),
-                Email("DevBot", "Top 10 ways C is better, number 6 will STUN you!"),
-                Email("e0f", "Free newsletters about top 10 lists, subscribe today!")
-            )
+        val emailAdapter = EmailAdapter(inflater)
+        root.email_list.adapter = emailAdapter
+        homeViewModel.mail.observe(viewLifecycleOwner, Observer {
+            emailAdapter.emails = it
+            emailAdapter.notifyDataSetChanged()
+        })
+
+        root.fetch.setOnClickListener {
+            val host = root.host.text.toString()
+            val user = root.user.text.toString()
+            val password = root.password.text.toString()
+            if (listOf(host, user, password).any { it.isEmpty() }) {
+                return@setOnClickListener
+            }
+
+            homeViewModel.fetchMail(host, user, password)
         }
 
         return root
