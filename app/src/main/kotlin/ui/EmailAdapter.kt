@@ -5,7 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
-import kotlinx.android.synthetic.main.email_list_item.view.*
+import kotlinx.android.synthetic.main.email_list_item_open.view.*
+
 import org.cmdline.ackr.Email
 import org.cmdline.ackr.R
 
@@ -18,26 +19,41 @@ class EmailAdapter(private val inflater: LayoutInflater) : BaseAdapter() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view: View
-        val vh: ViewHolder
+        val r: Int
+        val email = emails[position]
 
-        if (convertView == null) {
-            view = inflater.inflate(R.layout.email_list_item, parent, false)
-            vh = ViewHolder(view)
+
+        // FIXME this isn't how Recycling works
+        if (email.open) {
+            r = R.layout.email_list_item_open
+            view = inflater.inflate(r, parent, false)
+            val vh = ViewHolderOpen(view)
+            vh.from.text = email.from
+            vh.subject.text = email.subject
+            vh.body.text = email.body
+
             view.tag = vh
         } else {
-            view = convertView
-            vh = view.tag as ViewHolder
-        }
+            r = R.layout.email_list_item
+            view = inflater.inflate(r, parent, false)
+            val vh = ViewHolderClosed(view)
+            vh.from.text = email.from
+            vh.subject.text = email.subject
 
-        val email = emails[position]
-        vh.from.text = email.from
-        vh.subject.text = email.subject
+            view.tag = vh
+        }
 
         return view
     }
 
-    private class ViewHolder(row: View) {
+    private class ViewHolderClosed(row: View) {
         val from: TextView = row.from
         val subject: TextView = row.subject
+
+    }
+    private class ViewHolderOpen(row: View) {
+        val from: TextView = row.from
+        val subject: TextView = row.subject
+        val body: TextView = row.body
     }
 }

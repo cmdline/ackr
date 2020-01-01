@@ -6,6 +6,7 @@ import javax.mail.Folder
 import javax.mail.Session
 import javax.mail.Store
 
+
 class ImapConnection {
     private val socketFactory = MailSSLSocketFactory().apply {
         isTrustAllHosts = true // TODO: Terrible. Remove.
@@ -34,7 +35,11 @@ class ImapConnection {
             }
 
             it.messages.forEach { msg ->
-                email.add(Email(msg.from.firstOrNull()?.toString() ?: "", msg.subject))
+                email.add(Email(
+                    msg.from.firstOrNull()?.toString() ?: "",
+                    "is broken FIXME ",
+                    msg.subject,
+                    msg.content.toString() ?: "No Content!"))
             }
 
             it.close()

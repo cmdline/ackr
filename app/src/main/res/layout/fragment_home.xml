@@ -54,4 +54,5 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/fetch"
         tools:listitem="@layout/email_list_item"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

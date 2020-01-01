@@ -17,9 +17,9 @@ class HomeViewModel : ViewModel() {
 
     private val _mail = MutableLiveData<List<Email>>().apply {
         value = listOf(
-            Email("fake@email.ackr", "Save on your student loans NOW!"),
-            Email("DevBot", "Top 10 ways C is better, number 6 will STUN you!"),
-            Email("e0f", "Free newsletters about top 10 lists, subscribe today!")
+            Email("fake@email.ackr", "real@email.ackr","Save on your student loans NOW!", ""),
+            Email("DevBot", "themoose@theroad.ohno", "Top 10 ways C is better, number 6 will STUN you!", ""),
+            Email("e0f", "endoffile", "Free newsletters about top 10 lists, subscribe today!", "")
         )
     }
 

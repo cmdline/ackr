@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_home, R.id.nav_tools
             ), drawerLayout
         )
+
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
