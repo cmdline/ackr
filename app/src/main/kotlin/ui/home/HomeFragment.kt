@@ -39,15 +39,10 @@ class HomeFragment : Fragment() {
             emailAdapter.notifyDataSetChanged()
         })
 
-        root.email_list.setOnItemClickListener {
-            parent: AdapterView<*>, view: View, position: Int, id: Long -> UInt
-            for ((i, email) in emailAdapter.emails.withIndex()) {
-                email.open = false
-                if (i == position) {
-                    email.open = true
-                }
-            }
-            0
+        root.email_list.setOnItemClickListener { _, _, position, _ ->
+            emailAdapter.emails.forEach { it.open = false }
+            (emailAdapter.getItem(position) as Email).open = true
+            emailAdapter.notifyDataSetChanged()
         }
 
         root.fetch.setOnClickListener {
