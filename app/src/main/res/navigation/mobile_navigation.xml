@@ -7,13 +7,19 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="org.cmdline.ackr.ui.home.HomeFragment"
+        android:name="org.cmdline.ackr.ui.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/nav_tools"
-        android:name="org.cmdline.ackr.ui.tools.ToolsFragment"
+        android:name="org.cmdline.ackr.ui.ToolsFragment"
+        android:label="@string/menu_tools"
+        tools:layout="@layout/fragment_tools" />
+
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="org.cmdline.ackr.ui.ToolsFragment"
         android:label="@string/menu_tools"
         tools:layout="@layout/fragment_tools" />
 

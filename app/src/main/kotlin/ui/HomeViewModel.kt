@@ -1,4 +1,4 @@
-package org.cmdline.ackr.ui.home
+package org.cmdline.ackr.ui
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

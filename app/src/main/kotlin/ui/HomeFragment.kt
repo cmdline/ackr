@@ -1,19 +1,16 @@
-package org.cmdline.ackr.ui.home
+package org.cmdline.ackr.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import org.cmdline.ackr.Email
 import org.cmdline.ackr.R
-import org.cmdline.ackr.ui.EmailAdapter
 
 class HomeFragment : Fragment() {
 
