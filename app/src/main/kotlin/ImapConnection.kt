@@ -3,14 +3,15 @@ package org.cmdline.ackr
 import com.sun.mail.util.MailSSLSocketFactory
 import java.util.*
 import javax.mail.Flags
-import javax.mail.Folder
+import javax.mail.Message
 import javax.mail.Session
+import javax.mail.Folder
 import javax.mail.Store
 
 
 class ImapConnection {
     private val socketFactory = MailSSLSocketFactory().apply {
-        isTrustAllHosts = true // TODO: Terrible. Remove.
+//        isTrustAllHosts = true // TODO: Terrible. Remove.
     }
 
     private val properties = Properties().apply {
@@ -18,11 +19,7 @@ class ImapConnection {
         this["mail.imap.ssl.socketFactory"] = socketFactory
     }
 
-    fun fetchMail(
-        host: String,
-        user: String,
-        password: String
-    ): List<Email> {
+    fun fetchMail(host: String, user: String, password: String): List<Email> {
         val email = mutableListOf<Email>()
 
         val session: Session = Session.getInstance(properties, null)
@@ -35,14 +32,7 @@ class ImapConnection {
                 it.open(Folder.READ_ONLY)
             }
 
-            it.messages.forEach { msg ->
-                email.add(Email(
-                    msg.from.firstOrNull()?.toString() ?: "",
-                    "is broken FIXME ",
-                    msg.subject,
-                    msg.content.toString() ?: "No Content!",
-                    msg.flags.contains(Flags.Flag.SEEN)))
-            }
+            it.messages.forEach { m -> email.add(read_users_email(m)) }
 
             it.close()
         }
@@ -50,5 +40,15 @@ class ImapConnection {
         store.close()
 
         return email
+    }
+
+    private fun read_users_email(m: Message): Email {
+        return Email(
+            m.from.firstOrNull()?.toString() ?: "",
+            "is broken FIXME ",
+            m.subject,
+            m.content.toString() ?: "No Content!",
+            m.flags.contains(Flags.Flag.SEEN)
+        )
     }
 }
