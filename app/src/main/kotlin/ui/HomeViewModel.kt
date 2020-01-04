@@ -11,10 +11,6 @@ import org.cmdline.ackr.ImapConnection
 class HomeViewModel : ViewModel() {
     private val imap = ImapConnection()
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
-    }
-
     private val _mail = MutableLiveData<List<Email>>().apply {
         value = listOf(
             Email("fake@email.ackr", "real@email.ackr", "Save on your student loans NOW!", "lol"),
@@ -40,6 +36,5 @@ class HomeViewModel : ViewModel() {
         _mail.postValue(imap.fetchMail(host, user, password))
     }
 
-    val text: LiveData<String> = _text
     val mail: LiveData<List<Email>> = _mail
 }
