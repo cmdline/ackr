@@ -2,6 +2,7 @@ package org.cmdline.ackr
 
 import com.sun.mail.util.MailSSLSocketFactory
 import java.util.*
+import javax.mail.Flags
 import javax.mail.Folder
 import javax.mail.Session
 import javax.mail.Store
@@ -39,7 +40,8 @@ class ImapConnection {
                     msg.from.firstOrNull()?.toString() ?: "",
                     "is broken FIXME ",
                     msg.subject,
-                    msg.content.toString() ?: "No Content!"))
+                    msg.content.toString() ?: "No Content!",
+                    msg.flags.contains(Flags.Flag.SEEN)))
             }
 
             it.close()
