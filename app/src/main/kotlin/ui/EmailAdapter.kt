@@ -1,5 +1,6 @@
 package org.cmdline.ackr.ui
 
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,33 +28,32 @@ class EmailAdapter(private val inflater: LayoutInflater) : BaseAdapter() {
         if (email.open) {
             r = R.layout.email_list_item_open
             view = inflater.inflate(r, parent, false)
-            val vh = ViewHolderOpen(view)
-            vh.from.text = email.from
-            vh.subject.text = email.subject
-            vh.body.text = email.body
-
-            view.tag = vh
         } else {
             r = R.layout.email_list_item
             view = inflater.inflate(r, parent, false)
-            val vh = ViewHolderClosed(view)
-            vh.from.text = email.from
-            vh.subject.text = email.subject
-
-            view.tag = vh
         }
+
+        val vh = ViewHolderCommon(view, email)
+        vh.from.text = email.from
+        vh.subject.text = email.subject
+        vh.body?.text = email.body
+
+        view.tag = vh
 
         return view
     }
 
-    private class ViewHolderClosed(row: View) {
-        val from: TextView = row.from
-        val subject: TextView = row.subject
+    private class ViewHolderCommon(view: View, email: Email) {
+        val subject: TextView = view.subject
+        val from: TextView = view.from
+        val body: TextView? = view.body
 
+        init {
+            if (!email.read) {
+                from.setTypeface(null, Typeface.BOLD);
+                subject.setTypeface(null, Typeface.BOLD);
+            }
+        }
     }
-    private class ViewHolderOpen(row: View) {
-        val from: TextView = row.from
-        val subject: TextView = row.subject
-        val body: TextView = row.body
-    }
+
 }

@@ -33,6 +33,7 @@ class HomeFragment : Fragment() {
         root.email_list.setOnItemClickListener { _, _, position, _ ->
             emailAdapter.emails.forEach { it.open = false }
             (emailAdapter.getItem(position) as Email).open = true
+            (emailAdapter.getItem(position) as Email).read = true
             emailAdapter.notifyDataSetChanged()
         }
 

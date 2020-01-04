@@ -5,11 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="8dp"
     android:orientation="vertical">
+
     <TextView
         android:id="@+id/from"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="real@fakemail.ackr"/>
+        android:textSize="18sp"
+        tools:text="real@fakemail.ackr" />
     <TextView
         android:id="@+id/subject"
         android:layout_width="wrap_content"
