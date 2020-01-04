@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import org.cmdline.ackr.Email
 import org.cmdline.ackr.R
@@ -15,10 +16,8 @@ import org.cmdline.ackr.R
 class HomeFragment : Fragment() {
     private lateinit var vm: HomeViewModel
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         vm = ViewModelProviders.of(this).get(HomeViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
@@ -46,6 +45,16 @@ class HomeFragment : Fragment() {
                     return@setOnClickListener
                 }
 
+                val sb: Snackbar = Snackbar
+                    .make(it, "Error connecting to imap server!", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null)
+
+                val sb2: Snackbar = Snackbar
+                    .make(it, "Successfully connected to imap server!", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null)
+
+
+                vm.testServer(server, email, password, sb, sb2)
                 vm.fetchMail(server, email, password)
             }
         }

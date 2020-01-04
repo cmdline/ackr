@@ -3,6 +3,7 @@ package org.cmdline.ackr.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.cmdline.ackr.Email
@@ -32,9 +33,18 @@ class HomeViewModel : ViewModel() {
         )
     }
 
+    fun testServer(host: String, user: String, password: String, sb: Snackbar, sb2: Snackbar) = GlobalScope.launch {
+        if (imap.testServer(host, user, password)) {
+            sb2.show()
+        } else {
+            sb.show()
+        }
+    }
+
     fun fetchMail(host: String, user: String, password: String) = GlobalScope.launch {
         _mail.postValue(imap.fetchMail(host, user, password))
     }
 
     val mail: LiveData<List<Email>> = _mail
+    var connstate: Int = -1
 }

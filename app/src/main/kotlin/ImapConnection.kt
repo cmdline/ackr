@@ -2,11 +2,7 @@ package org.cmdline.ackr
 
 import com.sun.mail.util.MailSSLSocketFactory
 import java.util.*
-import javax.mail.Flags
-import javax.mail.Message
-import javax.mail.Session
-import javax.mail.Folder
-import javax.mail.Store
+import javax.mail.*
 
 
 class ImapConnection {
@@ -19,12 +15,30 @@ class ImapConnection {
         this["mail.imap.ssl.socketFactory"] = socketFactory
     }
 
+    var session: Session = Session.getInstance(properties, null)
+    var store: Store = session.getStore("imap")
+    
+
+    fun testServer(host: String, user: String, password: String): Boolean {
+        if (store.isConnected) {
+            return store.isConnected
+        }
+
+        try {
+            store.connect(host, -1, user, password)
+        } catch (e: AuthenticationFailedException) {
+            return false
+        }
+
+        return store.isConnected
+    }
+
     fun fetchMail(host: String, user: String, password: String): List<Email> {
         val email = mutableListOf<Email>()
 
-        val session: Session = Session.getInstance(properties, null)
-        val store: Store = session.getStore("imap")
-        store.connect(host, -1, user, password)
+        if (!store.isConnected) {
+            store.connect(host, -1, user, password)
+        }
 
         val allFolders = store.defaultFolder.list("*")
         allFolders.forEach {
@@ -33,7 +47,6 @@ class ImapConnection {
             }
 
             it.messages.forEach { m -> email.add(read_users_email(m)) }
-
             it.close()
         }
 
