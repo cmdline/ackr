@@ -17,7 +17,7 @@ class ImapConnection {
 
     var session: Session = Session.getInstance(properties, null)
     var store: Store = session.getStore("imap")
-    
+
 
     fun testServer(host: String, user: String, password: String): Boolean {
         if (store.isConnected) {

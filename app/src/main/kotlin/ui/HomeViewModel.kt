@@ -33,11 +33,15 @@ class HomeViewModel : ViewModel() {
         )
     }
 
-    fun testServer(host: String, user: String, password: String, sb: Snackbar, sb2: Snackbar) = GlobalScope.launch {
+    private val _connstate = MutableLiveData<Int>().apply {
+        value = -1
+    }
+
+    fun testServer(host: String, user: String, password: String) = GlobalScope.launch {
         if (imap.testServer(host, user, password)) {
-            sb2.show()
+            _connstate.postValue(1)
         } else {
-            sb.show()
+            _connstate.postValue(0)
         }
     }
 
@@ -46,5 +50,6 @@ class HomeViewModel : ViewModel() {
     }
 
     val mail: LiveData<List<Email>> = _mail
-    var connstate: Int = -1
+    val connstate: LiveData<Int> = _connstate
+
 }

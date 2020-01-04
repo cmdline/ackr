@@ -29,6 +29,18 @@ class HomeFragment : Fragment() {
             emailAdapter.notifyDataSetChanged()
         })
 
+        vm.connstate.observe(viewLifecycleOwner, Observer {
+            val sb: Snackbar = Snackbar.make(root, "", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null)
+            if (it == 0) {
+                sb.setText("Connection failed")
+                sb.show()
+            } else if (it == 1) {
+                sb.setText("Server connected!")
+                sb.show()
+            }
+        })
+
         root.email_list.setOnItemClickListener { _, _, position, _ ->
             emailAdapter.emails.forEach { it.open = false }
             (emailAdapter.getItem(position) as Email).open = true
@@ -45,16 +57,7 @@ class HomeFragment : Fragment() {
                     return@setOnClickListener
                 }
 
-                val sb: Snackbar = Snackbar
-                    .make(it, "Error connecting to imap server!", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null)
-
-                val sb2: Snackbar = Snackbar
-                    .make(it, "Successfully connected to imap server!", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null)
-
-
-                vm.testServer(server, email, password, sb, sb2)
+                vm.testServer(server, email, password)
                 vm.fetchMail(server, email, password)
             }
         }
