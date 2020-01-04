@@ -1,5 +1,6 @@
 package org.cmdline.ackr.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -36,14 +37,16 @@ class HomeFragment : Fragment() {
         }
 
         root.fetch.setOnClickListener {
-            val host = root.host.text.toString()
-            val user = root.user.text.toString()
-            val password = root.password.text.toString()
-            if (listOf(host, user, password).any { it.isEmpty() }) {
-                return@setOnClickListener
-            }
+            requireActivity().getSharedPreferences("ackr", Context.MODE_PRIVATE).run {
+                val server = getString("server", "")!!
+                val email = getString("email_address", "")!!
+                val password = getString("password", "")!!
+                if (listOf(server, email, password).any { it.isEmpty() }) {
+                    return@setOnClickListener
+                }
 
-            vm.fetchMail(host, user, password)
+                vm.fetchMail(server, email, password)
+            }
         }
 
         return root

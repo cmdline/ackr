@@ -6,34 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/host"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="mail server"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-    <EditText
-        android:id="@+id/user"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="email"
-        app:layout_constraintTop_toBottomOf="@id/host"/>
-
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="password"
-        android:inputType="textPassword"
-        app:layout_constraintTop_toBottomOf="@id/user"/>
-
     <Button
         android:id="@+id/fetch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="(try to) fetch email"
-        app:layout_constraintTop_toBottomOf="@id/password"/>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ListView
         android:id="@+id/email_list"
