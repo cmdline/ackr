@@ -44,6 +44,7 @@ class ImapConnection {
 
     private fun read_users_email(m: Message): Email {
         return Email(
+            m.messageNumber,
             m.from.firstOrNull()?.toString() ?: "",
             "is broken FIXME ",
             m.subject,

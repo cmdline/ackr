@@ -20,7 +20,10 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        vm = ViewModelProviders.of(this).get(HomeViewModel::class.java)
+        vm = ViewModelProviders.of(this).get(HomeViewModel::class.java).apply {
+            ctx = requireContext()
+        }
+
         val root = inflater.inflate(R.layout.fragment_home, container, false)
 
         val emailAdapter = EmailAdapter(inflater)
@@ -46,7 +49,7 @@ class HomeFragment : Fragment() {
                     return@setOnClickListener
                 }
 
-                vm.fetchMail(server, email, password)
+                vm.syncMail(server, email, password)
             }
         }
 

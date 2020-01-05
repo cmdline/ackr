@@ -1,40 +1,17 @@
 package org.cmdline.ackr.ui
 
+import android.content.Context
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.cmdline.ackr.Email
-import org.cmdline.ackr.ImapConnection
+import org.cmdline.ackr.db.EmailRepository
 
 class HomeViewModel : ViewModel() {
-    private val imap = ImapConnection()
+    lateinit var ctx: Context
+    private val emailRepository by lazy { EmailRepository(ctx) }
 
-    private val _mail = MutableLiveData<List<Email>>().apply {
-        value = listOf(
-            Email("fake@email.ackr", "real@email.ackr", "Save on your student loans NOW!", "lol"),
-            Email(
-                "DevBot",
-                "themoose@theroad.ohno",
-                "Top 10 ways C is better, number 6 will STUN you!",
-                "1. Weeds out the weak by containing pointers\n" +
-                        "2\n3\n4\n" +
-                        "I needed a long list, okay?"
-            ),
-            Email(
-                "e0f",
-                "endoffile",
-                "Free newsletters about top 10 lists, subscribe today!",
-                "1. How to stop worrying and love C\n" +
-                        "2. Dealing with crippling social ineptitude\n"
-            )
-        )
-    }
+    fun syncMail(host: String, user: String, password: String) =
+        emailRepository.sync(host, user, password)
 
-    fun fetchMail(host: String, user: String, password: String) = GlobalScope.launch {
-        _mail.postValue(imap.fetchMail(host, user, password))
-    }
-
-    val mail: LiveData<List<Email>> = _mail
+    val mail: LiveData<List<Email>> by lazy { emailRepository.get() }
 }

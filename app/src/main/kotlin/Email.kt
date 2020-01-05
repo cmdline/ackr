@@ -1,7 +1,13 @@
 package org.cmdline.ackr
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "email")
 data class Email(
     // Actual Data
+    @PrimaryKey
+    val message_no: Int,
     val from:       String,
     val to:         String,
     val subject:    String,
