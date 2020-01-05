@@ -1,5 +1,15 @@
 package org.cmdline.ackr
 
+import androidx.lifecycle.MutableLiveData
+
+data class Folder(
+    val name:   String,
+    val emails: MutableLiveData<List<Email>>,
+
+    // Our state, in the middle our app
+    var open:   Boolean = false
+)
+
 data class Email(
     // Actual Data
     val from:       String,

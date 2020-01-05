@@ -1,8 +1,15 @@
 package org.cmdline.ackr
 
+import androidx.lifecycle.MutableLiveData
 import com.sun.mail.util.MailSSLSocketFactory
 import java.util.*
-import javax.mail.*
+import javax.mail.Folder as JFolder
+import javax.mail.AuthenticationFailedException
+import javax.mail.Flags
+import javax.mail.Store
+import javax.mail.Session
+import javax.mail.Message
+
 
 
 class ImapConnection {
@@ -33,8 +40,8 @@ class ImapConnection {
         return store.isConnected
     }
 
-    fun fetchMail(host: String, user: String, password: String): List<Email> {
-        val email = mutableListOf<Email>()
+    fun fetchFolders(host: String, user: String, password: String): List<Folder> {
+        val folders = mutableListOf<Folder>()
 
         if (!store.isConnected) {
             store.connect(host, -1, user, password)
@@ -42,8 +49,25 @@ class ImapConnection {
 
         val allFolders = store.defaultFolder.list("*")
         allFolders.forEach {
+            folders.add(Folder(it.fullName, MutableLiveData<List<Email>>()))
+        }
+
+        store.close()
+
+        return folders
+    }
+
+    fun fetchMail(folder: String): List<Email> {
+        val email = mutableListOf<Email>()
+
+        if (!store.isConnected) {
+            return listOf()
+        }
+
+        val allFolders = store.defaultFolder.list(folder)
+        allFolders.forEach {
             if (!it.isOpen) {
-                it.open(Folder.READ_ONLY)
+                it.open(JFolder.READ_ONLY)
             }
 
             it.messages.forEach { m -> email.add(read_users_email(m)) }

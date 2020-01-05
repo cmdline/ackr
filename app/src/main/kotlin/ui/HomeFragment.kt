@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import org.cmdline.ackr.Email
+import org.cmdline.ackr.Folder
 import org.cmdline.ackr.R
 
 class HomeFragment : Fragment() {
@@ -22,11 +23,19 @@ class HomeFragment : Fragment() {
         vm = ViewModelProviders.of(this).get(HomeViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
 
-        val emailAdapter = EmailAdapter(inflater)
-        root.email_list.adapter = emailAdapter
-        vm.mail.observe(viewLifecycleOwner, Observer {
-            emailAdapter.emails = it
-            emailAdapter.notifyDataSetChanged()
+        val folderAdapter = FolderAdapter(inflater)
+        root.folder_list.adapter = folderAdapter
+
+        vm.folders.observe(viewLifecycleOwner, Observer {
+            folderAdapter.folders = it
+
+            it.forEach {
+                it.emails.observe(viewLifecycleOwner, Observer {
+                    folderAdapter.notifyDataSetChanged()
+                })
+            }
+
+            folderAdapter.notifyDataSetChanged()
         })
 
         vm.connstate.observe(viewLifecycleOwner, Observer {
@@ -34,19 +43,22 @@ class HomeFragment : Fragment() {
                     .setAction("Action", null)
             if (it == 0) {
                 sb.setText("Connection failed")
-                sb.show()
             } else if (it == 1) {
                 sb.setText("Server connected!")
-                sb.show()
             }
+            sb.show()
         })
 
-        root.email_list.setOnItemClickListener { _, _, position, _ ->
-            emailAdapter.emails.forEach { it.open = false }
-            (emailAdapter.getItem(position) as Email).open = true
-            (emailAdapter.getItem(position) as Email).read = true
-            emailAdapter.notifyDataSetChanged()
+
+        root.folder_list.setOnItemClickListener { view, _, position, _ ->
+            folderAdapter.folders.forEach { it.open = false }
+            val folder = folderAdapter.getItem(position) as Folder
+            folder.open = true
+            
+            vm.fetchMail(folder.name)
+            folderAdapter.notifyDataSetChanged()
         }
+
 
         root.fetch.setOnClickListener {
             requireActivity().getSharedPreferences("ackr", Context.MODE_PRIVATE).run {
@@ -57,11 +69,13 @@ class HomeFragment : Fragment() {
                     return@setOnClickListener
                 }
 
+
                 vm.testServer(server, email, password)
-                vm.fetchMail(server, email, password)
+                vm.fetchFolders(server, email, password)
             }
         }
 
         return root
     }
+
 }
