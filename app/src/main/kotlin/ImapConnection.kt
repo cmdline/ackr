@@ -26,7 +26,7 @@ class ImapConnection {
         val store: Store = session.getStore("imap")
         store.connect(host, -1, user, password)
 
-        val allFolders = store.defaultFolder.list("*")
+        val allFolders = store.defaultFolder.list("INBOX")
         allFolders.forEach {
             if (!it.isOpen) {
                 it.open(Folder.READ_ONLY)
@@ -44,8 +44,11 @@ class ImapConnection {
 
     private fun read_users_email(m: Message): Email {
         return Email(
+            m.messageNumber,
             m.from.firstOrNull()?.toString() ?: "",
             "is broken FIXME ",
+            m.sentDate?.toString() ?: "",
+            m.receivedDate?.toString() ?: "",
             m.subject,
             m.content.toString() ?: "No Content!",
             m.flags.contains(Flags.Flag.SEEN)
