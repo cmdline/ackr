@@ -30,7 +30,7 @@ class FolderAdapter(private val inflater: LayoutInflater) : BaseAdapter() {
             r = R.layout.folder_list_item_open
             view = inflater.inflate(r, parent, false)
         } else {
-            r = R.layout.folder_list_item_open
+            r = R.layout.folder_list_item
             view = inflater.inflate(r, parent, false)
         }
 
@@ -45,7 +45,7 @@ class FolderAdapter(private val inflater: LayoutInflater) : BaseAdapter() {
                 if  (folder.emails.value != null) {
                     eAdapter.emails = folder.emails.value!!
                 }
-//                eAdapter.notifyDataSetChanged()
+                eAdapter.notifyDataSetChanged()
             }
         }
 

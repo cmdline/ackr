@@ -28,13 +28,6 @@ class HomeFragment : Fragment() {
 
         vm.folders.observe(viewLifecycleOwner, Observer {
             folderAdapter.folders = it
-
-            it.forEach {
-                it.emails.observe(viewLifecycleOwner, Observer {
-                    folderAdapter.notifyDataSetChanged()
-                })
-            }
-
             folderAdapter.notifyDataSetChanged()
         })
 
@@ -54,7 +47,7 @@ class HomeFragment : Fragment() {
             folderAdapter.folders.forEach { it.open = false }
             val folder = folderAdapter.getItem(position) as Folder
             folder.open = true
-            
+
             vm.fetchMail(folder.name)
             folderAdapter.notifyDataSetChanged()
         }

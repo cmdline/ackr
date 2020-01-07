@@ -18,7 +18,12 @@ class HomeViewModel : ViewModel() {
                 "INBOX",
                 MutableLiveData<List<Email>>().apply {
                     value = listOf(
-                        Email("fake@email.ackr", "real@email.ackr", "Save on your student loans NOW!", "lol"),
+                        Email(
+                            "fake@email.ackr",
+                            "real@email.ackr",
+                            "Save on your student loans NOW!",
+                            "lol"
+                        ),
                         Email(
                             "DevBot",
                             "themoose@theroad.ohno",
