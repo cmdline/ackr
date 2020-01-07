@@ -37,6 +37,7 @@ class EmailAdapter(private val inflater: LayoutInflater) : BaseAdapter() {
         vh.from.text = email.from
         vh.subject.text = email.subject
         vh.body?.text = email.body
+        vh.recv_date.text = email.recv_date
 
         view.tag = vh
 
@@ -46,6 +47,7 @@ class EmailAdapter(private val inflater: LayoutInflater) : BaseAdapter() {
     private class ViewHolderCommon(view: View, email: Email) {
         val subject: TextView = view.subject
         val from: TextView = view.from
+        val recv_date: TextView = view.recv_date
         val body: TextView? = view.body
 
         init {
