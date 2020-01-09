@@ -20,13 +20,20 @@
 
         <TextView
             android:id="@+id/subject"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:maxLines="1"
             tools:text="Massive amounts of student loans" />
+
         <TextView
             android:id="@+id/recv_date"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="Unix Epoch -1" />
+            android:layout_gravity="end"
+            android:textAlignment="textEnd"
+            android:layout_weight="1"
+            android:maxLines="1"
+            tools:text="Unix Epoch -1"/>
     </LinearLayout>
 </LinearLayout>

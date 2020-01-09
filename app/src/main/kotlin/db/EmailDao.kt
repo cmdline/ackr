@@ -15,6 +15,6 @@ interface EmailDao {
     @Delete
     fun delete(emails: List<Email>)
 
-    @Query("SELECT * FROM email")
+    @Query("SELECT * FROM email ORDER BY recv_date DESC")
     fun load(): LiveData<List<Email>>
 }

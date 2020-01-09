@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.email_list_item_open.view.*
 
 import org.cmdline.ackr.Email
 import org.cmdline.ackr.R
+import java.util.*
 
 class EmailAdapter(private val inflater: LayoutInflater) : BaseAdapter() {
     var emails: List<Email> = listOf()
@@ -37,7 +38,7 @@ class EmailAdapter(private val inflater: LayoutInflater) : BaseAdapter() {
         vh.from.text = email.from
         vh.subject.text = email.subject
         vh.body?.text = email.body
-        vh.recv_date.text = email.recv_date
+        vh.recv_date.text = email.recv_date.toString()
 
         view.tag = vh
 
