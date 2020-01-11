@@ -15,6 +15,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.cmdline.ackr.Email
+import org.cmdline.ackr.Folder
 import org.cmdline.ackr.R
 
 class HomeFragment : Fragment() {
@@ -32,23 +33,39 @@ class HomeFragment : Fragment() {
         val folderAdapter = FolderAdapter(inflater)
         root.folder_list.adapter = folderAdapter
 
-        val emailAdapter = EmailAdapter(inflater)
-        root.email_list.adapter = emailAdapter
-        vm.mail.observe(viewLifecycleOwner, Observer {
-            emailAdapter.emails = it
-            emailAdapter.notifyDataSetChanged()
-        })
-
         vm.folder.observe(viewLifecycleOwner, Observer {
             folderAdapter.folders = it
             folderAdapter.notifyDataSetChanged()
         })
+        root.folder_list.setOnItemClickListener { _, _, position, _ ->
+            val touched = (folderAdapter.getItem(position) as Folder)
+            val plsclose: Boolean = (touched.open == true)
+            folderAdapter.folders.forEach { it.open = false }
 
+            if (plsclose) {
+                vm.search = ""
+            } else {
+                touched.open = true
+                vm.search = touched.name
+            }
+            folderAdapter.notifyDataSetChanged()
+
+            if (plsclose) {
+                root.folder_list.smoothScrollToPosition(position)
+            }
+        }
+
+        val emailAdapter = EmailAdapter(inflater)
+        root.email_list.adapter = emailAdapter
+
+        vm.mail.observe(viewLifecycleOwner, Observer {
+            emailAdapter.emails = it
+            emailAdapter.notifyDataSetChanged()
+        })
         root.email_list.setOnItemClickListener { _, _, position, _ ->
             val touched = (emailAdapter.getItem(position) as Email)
             val plsclose: Boolean = (touched.open == true)
             emailAdapter.emails.forEach { it.open = false }
-
 
             if (plsclose) {
                 touched.read = true
@@ -61,6 +78,7 @@ class HomeFragment : Fragment() {
                 root.email_list.smoothScrollToPosition(position)
             }
         }
+
 
         root.email_swipe_refresh.setOnRefreshListener {
             requireActivity().getSharedPreferences("ackr", Context.MODE_PRIVATE).run {

@@ -10,7 +10,9 @@ class EmailRepository(ctx: Context) {
     private val email_dao = App.db(ctx).emailDao()
     private val folder_dao = App.db(ctx).folderDao()
 
-    fun get(): LiveData<List<Email>> = email_dao.load()
+    fun get_all(): LiveData<List<Email>> = email_dao.load_all()
+
+    fun get_byFolder(folder: String): LiveData<List<Email>> = email_dao.load(folder)
 
     fun get_folder(): LiveData<List<Folder>> = folder_dao.load()
 

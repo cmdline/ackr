@@ -10,6 +10,8 @@ import org.cmdline.ackr.db.EmailRepository
 class HomeViewModel : ViewModel() {
     lateinit var ctx: Context
     var isRefreshing = false
+    var search: String = "INBOX"
+
 
     private val emailRepository by lazy { EmailRepository(ctx) }
 
@@ -20,6 +22,13 @@ class HomeViewModel : ViewModel() {
         isRefreshing = false
     }
 
-    val mail: LiveData<List<Email>> by lazy { emailRepository.get() }
+    val mail: LiveData<List<Email>> by lazy {
+        if (search == "") {
+            emailRepository.get_all()
+        } else {
+            emailRepository.get_byFolder(search)
+        }
+    }
+
     val folder: LiveData<List<Folder>> by lazy { emailRepository.get_folder() }
 }
