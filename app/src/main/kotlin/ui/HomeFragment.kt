@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -19,10 +20,8 @@ import org.cmdline.ackr.R
 class HomeFragment : Fragment() {
     private lateinit var vm: HomeViewModel
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+           savedInstanceState: Bundle?
     ): View? {
         vm = ViewModelProviders.of(this).get(HomeViewModel::class.java).apply {
             ctx = requireContext()
@@ -49,6 +48,10 @@ class HomeFragment : Fragment() {
                 touched.open = true
             }
             emailAdapter.notifyDataSetChanged()
+
+            if (plsclose) {
+                root.email_list.smoothScrollToPosition(position)
+            }
         }
 
         root.email_swipe_refresh.setOnRefreshListener {
