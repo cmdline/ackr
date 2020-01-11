@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.fragment_home.view.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.cmdline.ackr.Email
 import org.cmdline.ackr.R
 
@@ -40,16 +42,21 @@ class HomeFragment : Fragment() {
             emailAdapter.notifyDataSetChanged()
         }
 
-        root.fetch.setOnClickListener {
+        root.email_swipe_refresh.setOnRefreshListener {
             requireActivity().getSharedPreferences("ackr", Context.MODE_PRIVATE).run {
+                if (vm.isRefreshing) return@setOnRefreshListener
+
                 val server = getString("server", "")!!
                 val email = getString("email_address", "")!!
                 val password = getString("password", "")!!
                 if (listOf(server, email, password).any { it.isEmpty() }) {
-                    return@setOnClickListener
+                    return@setOnRefreshListener
                 }
 
-                vm.syncMail(server, email, password)
+                GlobalScope.launch {
+                    vm.syncMail(server, email, password)
+                    root.email_swipe_refresh.isRefreshing = false
+                }
             }
         }
 

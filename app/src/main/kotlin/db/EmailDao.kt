@@ -7,7 +7,7 @@ import org.cmdline.ackr.Email
 @Dao
 interface EmailDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(emails: List<Email>)
+    suspend fun save(emails: List<Email>)
 
     @Update
     fun update(email: Email)

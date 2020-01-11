@@ -8,10 +8,15 @@ import org.cmdline.ackr.db.EmailRepository
 
 class HomeViewModel : ViewModel() {
     lateinit var ctx: Context
+    var isRefreshing = false
+
     private val emailRepository by lazy { EmailRepository(ctx) }
 
-    fun syncMail(host: String, user: String, password: String) =
+    suspend fun syncMail(host: String, user: String, password: String) {
+        isRefreshing = true
         emailRepository.sync(host, user, password)
+        isRefreshing = false
+    }
 
     val mail: LiveData<List<Email>> by lazy { emailRepository.get() }
 }

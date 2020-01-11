@@ -12,7 +12,6 @@ class EmailRepository(ctx: Context) {
     private val dao = App.db(ctx).emailDao()
 
     fun get(): LiveData<List<Email>> = dao.load()
-    fun sync(host: String, user: String, password: String) = GlobalScope.launch {
+    suspend fun sync(host: String, user: String, password: String) =
         dao.save(ImapConnection().fetchMail(host, user, password))
-    }
 }
