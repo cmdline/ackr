@@ -38,9 +38,16 @@ class HomeFragment : Fragment() {
         })
 
         root.email_list.setOnItemClickListener { _, _, position, _ ->
+            val touched = (emailAdapter.getItem(position) as Email)
+            val plsclose: Boolean = (touched.open == true)
             emailAdapter.emails.forEach { it.open = false }
-            (emailAdapter.getItem(position) as Email).open = true
-            (emailAdapter.getItem(position) as Email).read = true
+
+
+            if (plsclose) {
+                touched.read = true
+            } else {
+                touched.open = true
+            }
             emailAdapter.notifyDataSetChanged()
         }
 
