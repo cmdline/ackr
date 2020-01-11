@@ -1,14 +1,8 @@
 package org.cmdline.ackr
 
 import com.sun.mail.util.MailSSLSocketFactory
-import java.util.Date
 import java.util.*
-import javax.mail.Flags
-import javax.mail.Message
-import javax.mail.Session
-import javax.mail.Folder
-import javax.mail.Store
-
+import javax.mail.*
 
 class ImapConnection {
     private val socketFactory = MailSSLSocketFactory().apply {
@@ -44,6 +38,16 @@ class ImapConnection {
     }
 
     private fun read_users_email(m: Message): Email {
+        val body = if (m.content is Multipart) {
+            val messageContent = StringBuffer()
+            val multipart = m.content as Multipart
+            for (i in 0 until multipart.count) {
+                messageContent.append(multipart.getBodyPart(i).content)
+            }
+            messageContent.toString()
+        } else {
+            m.content.toString()
+        }
         return Email(
             m.messageNumber,
             m.from.firstOrNull()?.toString() ?: "",
@@ -51,7 +55,7 @@ class ImapConnection {
             m.sentDate ?: Date(0),
             m.receivedDate ?: Date(0),
             m.subject,
-            m.content.toString() ?: "No Content!",
+            body,
             m.flags.contains(Flags.Flag.SEEN)
         )
     }
