@@ -29,11 +29,19 @@ class HomeFragment : Fragment() {
 
         val root = inflater.inflate(R.layout.fragment_home, container, false)
 
+        val folderAdapter = FolderAdapter(inflater)
+        root.folder_list.adapter = folderAdapter
+
         val emailAdapter = EmailAdapter(inflater)
         root.email_list.adapter = emailAdapter
         vm.mail.observe(viewLifecycleOwner, Observer {
             emailAdapter.emails = it
             emailAdapter.notifyDataSetChanged()
+        })
+
+        vm.folder.observe(viewLifecycleOwner, Observer {
+            folderAdapter.folders = it
+            folderAdapter.notifyDataSetChanged()
         })
 
         root.email_list.setOnItemClickListener { _, _, position, _ ->

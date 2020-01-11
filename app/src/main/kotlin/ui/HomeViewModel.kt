@@ -3,6 +3,7 @@ package org.cmdline.ackr.ui
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import org.cmdline.ackr.Folder
 import org.cmdline.ackr.Email
 import org.cmdline.ackr.db.EmailRepository
 
@@ -14,9 +15,11 @@ class HomeViewModel : ViewModel() {
 
     suspend fun syncMail(host: String, user: String, password: String) {
         isRefreshing = true
-        emailRepository.sync(host, user, password)
+        emailRepository.sync_folder(host, user, password)
+        emailRepository.sync_email(host, user, password)
         isRefreshing = false
     }
 
     val mail: LiveData<List<Email>> by lazy { emailRepository.get() }
+    val folder: LiveData<List<Folder>> by lazy { emailRepository.get_folder() }
 }

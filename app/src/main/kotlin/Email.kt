@@ -1,12 +1,8 @@
 package org.cmdline.ackr
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverter
-import androidx.room.TypeConverters
+import androidx.room.*
 import java.util.Date
 import java.util.*
-
 
 
 class Converters {
@@ -21,31 +17,34 @@ class Converters {
     }
 }
 
+
 @Entity(tableName = "email")
 @TypeConverters(Converters::class)
 data class Email(
-
     // Actual Data
     @PrimaryKey
-    val message_no: Int,
+    val msgid: Int,
 
-    val from:       String,
-    val to:         String,
+    @ForeignKey(entity = Folder::class, parentColumns = arrayOf("name"),
+        childColumns = arrayOf("folder"),
+        onDelete = ForeignKey.CASCADE)
+    val folder: String,
+
+    val from: String,
+    val to: String,
 
 
-    val sent_date:  Date,
-    val recv_date:  Date,
+    val sent_date: Date,
+    val recv_date: Date,
 
 
-    val subject:    String,
-    val body:       String,
+    val subject: String,
+    val body: String,
 
     // Changeable Data
-    var read:       Boolean = false,
+    var read: Boolean = false,
 
     // Our state
-    var open:           Boolean = false,
-    var notifi_grade:   Int = 1
+    var open: Boolean = false,
+    var notifi_grade: Int = 1
 )
-
-
