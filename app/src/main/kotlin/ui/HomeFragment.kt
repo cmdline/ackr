@@ -9,8 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.fragment_home.view.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.cmdline.ackr.Email
 import org.cmdline.ackr.R
 
@@ -55,7 +57,9 @@ class HomeFragment : Fragment() {
 
                 GlobalScope.launch {
                     vm.syncMail(server, email, password)
-                    root.email_swipe_refresh.isRefreshing = false
+                    withContext(Dispatchers.Main) {
+                        root.email_swipe_refresh.isRefreshing = false
+                    }
                 }
             }
         }
