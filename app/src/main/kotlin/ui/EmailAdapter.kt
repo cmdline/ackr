@@ -19,11 +19,17 @@ class EmailAdapter(private val inflater: LayoutInflater) : BaseAdapter() {
     override fun getItemId(position: Int): Long = position.toLong()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        // FIXME this isn't how Recycling works
-        val r = R.layout.email_list_item
-        val view = inflater.inflate(r, parent, false)
+        lateinit var view: View
+        lateinit var vh: ViewHolderCommon
 
-        val vh = ViewHolderCommon(view)
+        if (convertView == null) {
+            view = inflater.inflate(R.layout.email_list_item, parent, false)
+            vh = ViewHolderCommon(view)
+        } else {
+            view = convertView
+            vh = view.tag as ViewHolderCommon
+        }
+
         val email = emails[position]
         vh.from.text = email.from
         vh.subject.text = email.subject
