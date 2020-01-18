@@ -33,9 +33,11 @@ class EmailAdapter(private val inflater: LayoutInflater) : BaseAdapter() {
         val email = emails[position]
         vh.from.text = email.from
         vh.subject.text = email.subject
-        vh.body?.text = email.body.parseAsHtml().toString()
         vh.recv_date.text = email.recv_date.toString()
-
+        if (email.open) {
+            vh.body?.text = email.body.parseAsHtml().toString()
+        }
+        
         view.tag = vh
 
         view.body.visibility = if (email.open) {
