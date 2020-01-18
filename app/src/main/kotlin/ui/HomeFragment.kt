@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_home.view.*
@@ -30,6 +31,32 @@ class HomeFragment : Fragment() {
 
         val root = inflater.inflate(R.layout.fragment_home, container, false)
 
+
+        val emailAdapter = EmailAdapter(inflater)
+        root.email_list.adapter = emailAdapter
+
+//        vm.mail.observe(viewLifecycleOwner, Observer {
+//            emailAdapter.emails = it
+//            emailAdapter.notifyDataSetChanged()
+//        })
+        root.email_list.setOnItemClickListener { _, _, position, _ ->
+            val touched = (emailAdapter.getItem(position) as Email)
+            val plsclose: Boolean = (touched.open == true)
+            emailAdapter.emails.forEach { it.open = false }
+
+            if (plsclose) {
+                touched.read = true
+            } else {
+                touched.open = true
+            }
+            emailAdapter.notifyDataSetChanged()
+
+            if (plsclose) {
+                root.email_list.smoothScrollToPosition(position)
+            }
+        }
+
+
         val folderAdapter = FolderAdapter(inflater)
         root.folder_list.adapter = folderAdapter
 
@@ -50,34 +77,16 @@ class HomeFragment : Fragment() {
             }
             folderAdapter.notifyDataSetChanged()
 
+            val filtered = vm.get_search(touched.name)
+            if (filtered != null) {
+                emailAdapter.emails = filtered
+                emailAdapter.notifyDataSetChanged()
+            }
             if (plsclose) {
                 root.folder_list.smoothScrollToPosition(position)
             }
         }
 
-        val emailAdapter = EmailAdapter(inflater)
-        root.email_list.adapter = emailAdapter
-
-        vm.mail.observe(viewLifecycleOwner, Observer {
-            emailAdapter.emails = it
-            emailAdapter.notifyDataSetChanged()
-        })
-        root.email_list.setOnItemClickListener { _, _, position, _ ->
-            val touched = (emailAdapter.getItem(position) as Email)
-            val plsclose: Boolean = (touched.open == true)
-            emailAdapter.emails.forEach { it.open = false }
-
-            if (plsclose) {
-                touched.read = true
-            } else {
-                touched.open = true
-            }
-            emailAdapter.notifyDataSetChanged()
-
-            if (plsclose) {
-                root.email_list.smoothScrollToPosition(position)
-            }
-        }
 
 
         root.email_swipe_refresh.setOnRefreshListener {

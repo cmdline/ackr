@@ -17,10 +17,10 @@ interface EmailDao {
     fun delete(emails: List<Email>)
 
     @Query("SELECT * FROM email WHERE folder = :name ORDER BY recv_date DESC")
-    fun load(name: String): LiveData<List<Email>>
+    fun load(name: String): List<Email>
 
     @Query("SELECT * FROM email ORDER BY recv_date DESC")
-    fun load_all(): LiveData<List<Email>>
+    fun load_all(): List<Email>
 }
 
 

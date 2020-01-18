@@ -8,6 +8,8 @@ object App {
     fun db(ctx: Context): Database {
         if (instance == null) {
             instance = Room.databaseBuilder(ctx, Database::class.java, "db")
+                .fallbackToDestructiveMigration()
+                .allowMainThreadQueries()
                 .build()
         }
 
