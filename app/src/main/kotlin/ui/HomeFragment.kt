@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.LiveData
@@ -31,39 +32,15 @@ class HomeFragment : Fragment() {
 
         val root = inflater.inflate(R.layout.fragment_home, container, false)
 
-
-        val emailAdapter = EmailAdapter(inflater)
-        root.email_list.adapter = emailAdapter
-
-//        vm.mail.observe(viewLifecycleOwner, Observer {
-//            emailAdapter.emails = it
-//            emailAdapter.notifyDataSetChanged()
-//        })
-        root.email_list.setOnItemClickListener { _, _, position, _ ->
-            val touched = (emailAdapter.getItem(position) as Email)
-            val plsclose: Boolean = (touched.open == true)
-            emailAdapter.emails.forEach { it.open = false }
-
-            if (plsclose) {
-                touched.read = true
-            } else {
-                touched.open = true
-            }
-            emailAdapter.notifyDataSetChanged()
-
-            if (plsclose) {
-                root.email_list.smoothScrollToPosition(position)
-            }
-        }
-
-
         val folderAdapter = FolderAdapter(inflater)
         root.folder_list.adapter = folderAdapter
 
+//        ViewCompat.setNestedScrollingEnabled(root.folder_list, true);
         vm.folder.observe(viewLifecycleOwner, Observer {
             folderAdapter.folders = it
             folderAdapter.notifyDataSetChanged()
         })
+
         root.folder_list.setOnItemClickListener { _, _, position, _ ->
             val touched = (folderAdapter.getItem(position) as Folder)
             val plsclose: Boolean = (touched.open == true)
@@ -79,35 +56,14 @@ class HomeFragment : Fragment() {
 
             val filtered = vm.get_search(touched.name)
             if (filtered != null) {
-                emailAdapter.emails = filtered
-                emailAdapter.notifyDataSetChanged()
+                folderAdapter.emails = filtered
             }
+
             if (plsclose) {
                 root.folder_list.smoothScrollToPosition(position)
             }
         }
 
-
-
-        root.email_swipe_refresh.setOnRefreshListener {
-            requireActivity().getSharedPreferences("ackr", Context.MODE_PRIVATE).run {
-                if (vm.isRefreshing) return@setOnRefreshListener
-
-                val server = getString("server", "")!!
-                val email = getString("email_address", "")!!
-                val password = getString("password", "")!!
-                if (listOf(server, email, password).any { it.isEmpty() }) {
-                    return@setOnRefreshListener
-                }
-
-                GlobalScope.launch {
-                    vm.syncMail(server, email, password)
-                    withContext(Dispatchers.Main) {
-                        root.email_swipe_refresh.isRefreshing = false
-                    }
-                }
-            }
-        }
 
         return root
     }

@@ -13,5 +13,28 @@
         android:layout_height="wrap_content"
         android:textSize="18sp"
         tools:text="LOCAL_INBOX" />
+    <TextView
+        android:id="@+id/folder_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:visibility="gone"
+        tools:text="LOCAL_INBOX" />
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/email_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ff55ff">
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            <ListView
+                android:id="@+id/email_list"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="true"
+                android:nestedScrollingEnabled="true"
+                android:background="#55ff55">
+            </ListView>
 
 </LinearLayout>
