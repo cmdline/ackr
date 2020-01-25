@@ -63,11 +63,12 @@ class FolderAdapter(private val inflater: LayoutInflater) : BaseAdapter() {
             }
             emailAdapter.emails = emails
             emailAdapter.notifyDataSetChanged()
-            vh.email_list.visibility = View.VISIBLE
-            vh.folder_status.visibility = View.VISIBLE
+            vh.email_refresh.visibility = View.VISIBLE
+
+//            vh.email_list.layoutParams.height = 2400
+            vh.email_refresh.layoutParams.height = 2400
         } else {
-            vh.folder_status.visibility = View.GONE
-            vh.email_list.visibility = View.GONE
+            vh.email_refresh.visibility = View.GONE
         }
 
 
@@ -101,7 +102,6 @@ class FolderAdapter(private val inflater: LayoutInflater) : BaseAdapter() {
 
     private class ViewHolder(view: View) {
         val folder_name: TextView = view.folder_name
-        val folder_status: TextView = view.folder_status
         val email_list: ListView = view.email_list
         val email_refresh: androidx.swiperefreshlayout.widget.SwipeRefreshLayout = view.email_refresh
     }

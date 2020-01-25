@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:padding="8dp"
     android:orientation="vertical"
     android:id="@+id/folder_block">
 
@@ -12,29 +11,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="18sp"
-        tools:text="LOCAL_INBOX" />
-    <TextView
-        android:id="@+id/folder_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:visibility="gone"
+        android:padding="8dp"
         tools:text="LOCAL_INBOX" />
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/email_refresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:visibility="gone"
         android:background="#ff55ff">
+        <ListView
+            android:id="@+id/email_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true"
+            android:nestedScrollingEnabled="true"
+            android:background="#55ff55">
+        </ListView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-            <ListView
-                android:id="@+id/email_list"
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fillViewport="true"
-                android:nestedScrollingEnabled="true"
-                android:background="#55ff55">
-            </ListView>
 
 </LinearLayout>
