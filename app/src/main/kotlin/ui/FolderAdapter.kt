@@ -16,6 +16,27 @@ import org.cmdline.ackr.R
 class FolderAdapter(private val inflater: LayoutInflater) : BaseAdapter() {
     var folders: List<Folder> = listOf()
     var emails: List<Email> = listOf()
+    val eadapter: EmailAdapter
+
+    init {
+        eadapter = EmailAdapter(inflater)
+
+    }
+
+    fun emailClickListener(pos: Int): Boolean {
+        val touched = (eadapter.getItem(pos) as Email)
+        val plsclose: Boolean = (touched.open == true)
+        eadapter.emails.forEach { it.open = false }
+
+        if (plsclose) {
+            touched.read = true
+        } else {
+            touched.open = true
+        }
+        eadapter.notifyDataSetChanged()
+        return plsclose
+
+    }
 
     override fun getCount(): Int = folders.size
     override fun getItem(position: Int): Any = folders[position]
@@ -42,27 +63,15 @@ class FolderAdapter(private val inflater: LayoutInflater) : BaseAdapter() {
 
 
         if (folder.open) {
-            val emailAdapter = EmailAdapter(inflater)
-            vh.email_list.adapter = emailAdapter
+            vh.email_list.adapter = eadapter
 
             vh.email_list.setOnItemClickListener { _, _, position, _ ->
-                val touched = (emailAdapter.getItem(position) as Email)
-                val plsclose: Boolean = (touched.open == true)
-                emailAdapter.emails.forEach { it.open = false }
-
-                if (plsclose) {
-                    touched.read = true
-                } else {
-                    touched.open = true
-                }
-                emailAdapter.notifyDataSetChanged()
-
-                if (plsclose) {
+                if (emailClickListener(position)) {
                     vh.email_list.smoothScrollToPosition(position)
                 }
             }
-            emailAdapter.emails = emails
-            emailAdapter.notifyDataSetChanged()
+            eadapter.emails = emails
+            eadapter.notifyDataSetChanged()
             vh.email_refresh.visibility = View.VISIBLE
 
 //            vh.email_list.layoutParams.height = 2400
