@@ -10,14 +10,14 @@
         android:id="@+id/folder_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:textSize="22sp"
         android:padding="8dp"
         tools:text="LOCAL_INBOX" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/email_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:visibility="gone"
         android:background="#ff55ff">
         <ListView

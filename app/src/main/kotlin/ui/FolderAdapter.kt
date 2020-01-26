@@ -1,26 +1,44 @@
 package org.cmdline.ackr.ui
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ListView
 import android.widget.TextView
-import androidx.lifecycle.ViewModelProviders
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.android.synthetic.main.folder_list_item.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.cmdline.ackr.Email
 
 import org.cmdline.ackr.Folder
 import org.cmdline.ackr.R
+import org.cmdline.ackr.db.EmailRepository
 
-class FolderAdapter(private val inflater: LayoutInflater) : BaseAdapter() {
+class FolderAdapter(private val inflater: LayoutInflater, private val ctx: Context): BaseAdapter() {
     var folders: List<Folder> = listOf()
     var emails: List<Email> = listOf()
-    val eadapter: EmailAdapter
+    val eadapter: EmailAdapter = EmailAdapter(inflater)
+    var isRefreshing = false
+    val er = EmailRepository(ctx)
+    var server: String = ""
+    var email: String = ""
+    var passwd: String = ""
 
     init {
-        eadapter = EmailAdapter(inflater)
+        update_creds()
+    }
 
+    fun update_creds() {
+        ctx.getSharedPreferences("ackr", Context.MODE_PRIVATE).run {
+            server = getString("server", "")!!
+            email = getString("email_address", "")!!
+            passwd = getString("password", "")!!
+        }
     }
 
     fun emailClickListener(pos: Int): Boolean {
@@ -65,17 +83,18 @@ class FolderAdapter(private val inflater: LayoutInflater) : BaseAdapter() {
         if (folder.open) {
             vh.email_list.adapter = eadapter
 
-            vh.email_list.setOnItemClickListener { _, _, position, _ ->
-                if (emailClickListener(position)) {
-                    vh.email_list.smoothScrollToPosition(position)
+            vh.email_list.setOnItemClickListener { _, _, p, _ ->
+                if (emailClickListener(p)) {
+                    vh.email_list.smoothScrollToPosition(p)
                 }
             }
             eadapter.emails = emails
             eadapter.notifyDataSetChanged()
+
             vh.email_refresh.visibility = View.VISIBLE
 
-//            vh.email_list.layoutParams.height = 2400
-            vh.email_refresh.layoutParams.height = 2400
+            vh.email_list.layoutParams.height = 1800
+            vh.email_refresh.layoutParams.height = 1800
         } else {
             vh.email_refresh.visibility = View.GONE
         }
@@ -84,24 +103,17 @@ class FolderAdapter(private val inflater: LayoutInflater) : BaseAdapter() {
         // todo move this
 
         vh.email_refresh.setOnRefreshListener {
-            // @robinlinden will fix this
-            //            requireActivity().getSharedPreferences("ackr", Context.MODE_PRIVATE).run {
-//                if (vm.isRefreshing) return@setOnRefreshListener
-//
-//                val server = getString("server", "")!!
-//                val email = getString("email_address", "")!!
-//                val password = getString("password", "")!!
-//                if (listOf(server, email, password).any { it.isEmpty() }) {
-//                    return@setOnRefreshListener
-//                }
-//
-//                GlobalScope.launch {
-//                    vm.syncMail(server, email, password)
-//                    withContext(Dispatchers.Main) {
-//                        vh.email_refresh.isRefreshing = false
-//                    }
-//                }
-//            }
+            if (isRefreshing) return@setOnRefreshListener
+            if (listOf(server, email, passwd).any { it.isEmpty() }) {
+                update_creds()
+            }
+
+            GlobalScope.launch {
+                er.sync_email(server, email, passwd)
+                withContext(Dispatchers.Main) {
+                    vh.email_refresh.isRefreshing = false
+                }
+            }
         }
 
 
@@ -112,7 +124,7 @@ class FolderAdapter(private val inflater: LayoutInflater) : BaseAdapter() {
     private class ViewHolder(view: View) {
         val folder_name: TextView = view.folder_name
         val email_list: ListView = view.email_list
-        val email_refresh: androidx.swiperefreshlayout.widget.SwipeRefreshLayout = view.email_refresh
+        val email_refresh: SwipeRefreshLayout = view.email_refresh
     }
 
 }

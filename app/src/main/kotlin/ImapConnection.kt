@@ -39,7 +39,7 @@ class ImapConnection {
         val store: Store = session.getStore("imap")
         store.connect(host, -1, user, password)
 
-        val allFolders = store.defaultFolder.list("*")
+        val allFolders = store.defaultFolder.list("INBOX")
         allFolders.forEach {
             if (!it.isOpen) {
                 it.open(J_Folder.READ_ONLY)
